@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Проект
+# Временные файлы результатов
+files/results/*.docx
+files/uploads/*.docx
+files/telegram_uploads/*.docx
+files/telegram_results/*.docx
+
+# Старые результаты
+result.docx
+*.xlsx
+
+# История чатов (можно закомментировать если нужно сохранять)
+perplexity_chats.json
+
+# Переменные окружения (НИКОГДА не коммитьте файлы с реальными ключами!)
+.env
+.env.local
+.env.*
+!env.example
+!config/env.example
+
+# Логи
+*.log
+
+# Тестовые файлы (не шаблон)
+files/Продвинутый_уровень_*.docx
+files/Документ1.docx
+
+# Скрипты разработки (опционально, можно закоммитить)
+# scripts/
