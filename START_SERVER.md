@@ -6,7 +6,7 @@
 
 ```bash
 # Перейдите в папку проекта
-cd /path/to/Work_Programm_developer
+cd /Work_Programm_developer
 
 # Создайте файл .env с вашими ключами
 nano .env
@@ -20,6 +20,18 @@ PORT=8000
 ```
 
 Сохраните: `Ctrl+O`, `Enter`, `Ctrl+X`
+
+**Или используйте быструю команду:**
+```bash
+cat > .env << 'EOF'
+PPLX_API_KEY=ваш_ключ_perplexity
+TELEGRAM_BOT_TOKEN=ваш_токен_бота
+PORT=8000
+EOF
+nano .env  # Отредактируйте и укажите реальные значения
+```
+
+**Если получили ошибку про .env файл:** См. [FIX_ENV_ERROR.md](FIX_ENV_ERROR.md)
 
 ## Шаг 2: Запуск (выберите один вариант)
 
