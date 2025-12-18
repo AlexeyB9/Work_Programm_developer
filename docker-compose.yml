@@ -7,10 +7,9 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
-    # env_file:
-    #   - .env
-    # Раскомментируйте выше, если создали файл .env
-    # Или используйте environment ниже
+    env_file:
+      - .env
+    # Если файл .env не создан, закомментируйте выше и раскомментируйте environment ниже
     volumes:
       - ./files:/app/files
     environment:
