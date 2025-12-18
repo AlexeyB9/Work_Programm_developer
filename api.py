@@ -355,11 +355,48 @@ async def upload_file(file: UploadFile = File(...)):
         
         return {"file_id": file_id, "message": "Файл успешно обработан"}
         
-    except Exception as e:
-        # Удаляем загруженный файл при ошибке
+    except ValueError as e:
+        # Ошибки валидации (например, отсутствие API ключа)
+        error_msg = str(e)
         if uploaded_file_path.exists():
             uploaded_file_path.unlink()
-        raise HTTPException(status_code=500, detail=f"Ошибка при обработке: {str(e)}")
+        import traceback
+        print(f"Ошибка валидации: {error_msg}")
+        traceback.print_exc()
+        # Более понятное сообщение для пользователя
+        if "PPLX_API_KEY" in error_msg:
+            raise HTTPException(
+                status_code=500, 
+                detail="Ошибка конфигурации: API ключ не установлен. Проверьте переменную окружения PPLX_API_KEY в .env файле."
+            )
+        raise HTTPException(status_code=500, detail=f"Ошибка конфигурации: {error_msg}")
+    except FileNotFoundError as e:
+        # Файл не найден
+        error_msg = str(e)
+        if uploaded_file_path.exists():
+            uploaded_file_path.unlink()
+        print(f"Файл не найден: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Файл не найден: {error_msg}. Убедитесь что файл шаблона files/Шаблон.docx существует."
+        )
+    except Exception as e:
+        # Общие ошибки
+        error_msg = str(e)
+        if uploaded_file_path.exists():
+            uploaded_file_path.unlink()
+        import traceback
+        print(f"Ошибка при обработке: {error_msg}")
+        traceback.print_exc()
+        # Более детальное сообщение об ошибке
+        if "PPLX_API_KEY" in error_msg or "API" in error_msg:
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Ошибка API: Проверьте что PPLX_API_KEY установлен в переменных окружения. Детали: {error_msg}"
+            )
+        raise HTTPException(status_code=500, detail=f"Ошибка при обработке: {error_msg}")
 
 
 @app.get("/download/{file_id}")
@@ -385,10 +422,42 @@ async def download_file(file_id: str):
     )
 
 
+@app.get("/favicon.ico")
+async def favicon():
+    """Обработка favicon чтобы избежать 404 ошибок"""
+    from fastapi.responses import Response
+    return Response(status_code=204)  # No Content
+
+
 @app.on_event("startup")
 async def startup_event():
     """Событие запуска приложения"""
-    print("Веб-сервер запущен на http://localhost:8000")
+    import os
+    print("=" * 60)
+    print("🚀 Веб-сервер запущен")
+    print("=" * 60)
+    print(f"📍 URL: http://0.0.0.0:8000")
+    
+    # Проверка переменных окружения
+    pplx_key = os.getenv("PPLX_API_KEY")
+    if pplx_key:
+        print(f"✅ PPLX_API_KEY установлен (длина: {len(pplx_key)} символов)")
+    else:
+        print("⚠️  PPLX_API_KEY НЕ установлен! API запросы не будут работать.")
+    
+    telegram_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    if telegram_token:
+        print(f"✅ TELEGRAM_BOT_TOKEN установлен")
+    else:
+        print("ℹ️  TELEGRAM_BOT_TOKEN не установлен (Telegram бот не будет работать)")
+    
+    # Проверка шаблона
+    if TEMPLATE_PATH.exists():
+        print(f"✅ Шаблон найден: {TEMPLATE_PATH}")
+    else:
+        print(f"❌ Шаблон НЕ найден: {TEMPLATE_PATH}")
+    
+    print("=" * 60)
 
 
 if __name__ == "__main__":

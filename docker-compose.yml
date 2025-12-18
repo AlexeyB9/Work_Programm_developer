@@ -6,7 +6,7 @@ services:
     container_name: guap
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "0.0.0.0:8000:8000"  # Явно указываем что слушаем на всех интерфейсах
     env_file:
       - .env
     # Если файл .env не создан, закомментируйте выше и раскомментируйте environment ниже

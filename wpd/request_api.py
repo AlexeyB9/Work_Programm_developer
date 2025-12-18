@@ -204,8 +204,23 @@ def call_api_in_one(
         "stream": True
     }
 
-    # Отправляем потоковый запрос
-    stream = client.chat.completions.create(**stream_params)
+    # Отправляем потоковый запрос с обработкой ошибок
+    try:
+        stream = client.chat.completions.create(**stream_params)
+    except Exception as api_error:
+        error_msg = str(api_error)
+        if "api_key" in error_msg.lower() or "authentication" in error_msg.lower() or "401" in error_msg:
+            raise ValueError(
+                f"Ошибка аутентификации API: Проверьте что PPLX_API_KEY установлен правильно. "
+                f"Детали: {error_msg}"
+            )
+        elif "connection" in error_msg.lower() or "timeout" in error_msg.lower() or "network" in error_msg.lower():
+            raise ConnectionError(
+                f"Ошибка подключения к Perplexity API: {error_msg}. "
+                f"Проверьте интернет-соединение и доступность api.perplexity.ai"
+            )
+        else:
+            raise Exception(f"Ошибка при запросе к Perplexity API: {error_msg}")
 
     # В streaming у чанков обычно есть chunk.id (completion id). Это НЕ chat/thread id, но полезно для логов.
     completion_id: str | None = None
@@ -314,8 +329,23 @@ def call_api_in_two(
         "stream": True
     }
 
-    # Отправляем потоковый запрос
-    stream = client.chat.completions.create(**stream_params)
+    # Отправляем потоковый запрос с обработкой ошибок
+    try:
+        stream = client.chat.completions.create(**stream_params)
+    except Exception as api_error:
+        error_msg = str(api_error)
+        if "api_key" in error_msg.lower() or "authentication" in error_msg.lower() or "401" in error_msg:
+            raise ValueError(
+                f"Ошибка аутентификации API: Проверьте что PPLX_API_KEY установлен правильно. "
+                f"Детали: {error_msg}"
+            )
+        elif "connection" in error_msg.lower() or "timeout" in error_msg.lower() or "network" in error_msg.lower():
+            raise ConnectionError(
+                f"Ошибка подключения к Perplexity API: {error_msg}. "
+                f"Проверьте интернет-соединение и доступность api.perplexity.ai"
+            )
+        else:
+            raise Exception(f"Ошибка при запросе к Perplexity API: {error_msg}")
 
     # В streaming у чанков обычно есть chunk.id (completion id). Это НЕ chat/thread id, но полезно для логов.
     completion_id: str | None = None

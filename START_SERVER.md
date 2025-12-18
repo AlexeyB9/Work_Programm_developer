@@ -73,15 +73,35 @@ chmod +x QUICK_DOCKER_START.sh
 ./QUICK_DOCKER_START.sh
 ```
 
-## Шаг 3: Проверка
+## Шаг 3: Настройка файрвола
 
-Откройте в браузере: `http://ваш_сервер:8000`
+**ВАЖНО:** Откройте порт 8000 в файрволе:
 
-Или проверьте статус:
 ```bash
+# Ubuntu/Debian (ufw)
+sudo ufw allow 8000/tcp
+sudo ufw reload
+
+# CentOS/RHEL (firewalld)
+sudo firewall-cmd --permanent --add-port=8000/tcp
+sudo firewall-cmd --reload
+```
+
+## Шаг 4: Проверка
+
+```bash
+# Проверка доступности
+chmod +x check_access.sh
+./check_access.sh
+
+# Или вручную
 docker ps
 curl http://localhost:8000
 ```
+
+Откройте в браузере: `http://IP_ВАШЕГО_СЕРВЕРА:8000`
+
+**Если недоступно извне:** См. [FIREWALL_SETUP.md](FIREWALL_SETUP.md)
 
 ## Управление
 
@@ -109,6 +129,24 @@ docker-compose down
 
 ## Проблемы?
 
+### Приложение недоступно извне:
+
+1. **Проверьте файрвол:**
+   ```bash
+   sudo ufw allow 8000/tcp  # Ubuntu/Debian
+   sudo firewall-cmd --permanent --add-port=8000/tcp && sudo firewall-cmd --reload  # CentOS/RHEL
+   ```
+
+2. **Проверьте доступность:**
+   ```bash
+   chmod +x check_access.sh
+   ./check_access.sh
+   ```
+
+3. **Используйте правильный IP:**
+   - Не `localhost` или `127.0.0.1`
+   - Используйте внешний IP сервера: `http://IP_СЕРВЕРА:8000`
+
 Смотрите логи:
 ```bash
 docker logs guap
@@ -116,5 +154,7 @@ docker logs guap
 docker-compose logs -f
 ```
 
-Подробная инструкция: [DOCKER_RUN.md](DOCKER_RUN.md)
+Подробная инструкция: [DOCKER_RUN.md](DOCKER_RUN.md)  
+Проверка доступа: [VERIFY_ACCESS.md](VERIFY_ACCESS.md)  
+Настройка файрвола: [FIREWALL_SETUP.md](FIREWALL_SETUP.md)
 

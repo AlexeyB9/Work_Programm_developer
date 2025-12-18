@@ -18,22 +18,35 @@ def start_telegram_bot():
         return
     
     try:
+        import os
+        # Проверка токена перед запуском
+        bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+        if not bot_token:
+            print("⚠️  TELEGRAM_BOT_TOKEN не установлен. Telegram бот не будет запущен.")
+            print("   Установите переменную окружения TELEGRAM_BOT_TOKEN в .env файле.")
+            return
+        
         sys.path.insert(0, str(Path(__file__).parent))
         from tgbot.bot import run_bot
         _bot_started = True
-        print("Запуск Telegram бота...")
+        print("🤖 Запуск Telegram бота...")
         run_bot()
     except Exception as e:
         _bot_started = False
         error_msg = str(e)
         if "Conflict" in error_msg or "terminated by other getUpdates" in error_msg:
-            print("Telegram бот уже запущен в другом процессе.")
+            print("⚠️  Telegram бот уже запущен в другом процессе.")
             print("   Убедитесь, что не запущены другие экземпляры бота.")
             print("   Веб-сервер будет работать без бота.")
+        elif "TELEGRAM_BOT_TOKEN" in error_msg or "токен" in error_msg.lower():
+            print("⚠️  Ошибка конфигурации Telegram бота: токен не установлен или неверный.")
+            print("   Установите TELEGRAM_BOT_TOKEN в .env файле.")
+            print("   Веб-сервер будет работать без бота.")
         else:
-            print(f"Ошибка при запуске Telegram бота: {e}")
+            print(f"❌ Ошибка при запуске Telegram бота: {e}")
             import traceback
             traceback.print_exc()
+            print("   Веб-сервер будет работать без бота.")
 
 def start_web_server():
     """Запуск веб-сервера"""
