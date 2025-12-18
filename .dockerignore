@@ -17,4 +17,5 @@ files/telegram_results/
 perplexity_chats.json
 result.docx
 *.xlsx
-
+.DS_Store
+Thumbs.db
