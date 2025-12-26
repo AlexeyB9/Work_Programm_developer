@@ -66,17 +66,27 @@ def start_web_server():
 
 def main():
     """Главная функция запуска всех сервисов"""
+    import os
     print("=" * 60)
     print("🚀 Запуск всех сервисов ГУАП")
     print("=" * 60)
     print()
     
-    # Запускаем Telegram бота в отдельном потоке
-    bot_thread = threading.Thread(target=start_telegram_bot, daemon=True)
-    bot_thread.start()
+    # Проверяем, нужно ли запускать Telegram бота
+    # В Docker контейнерах бот отключен по умолчанию из-за проблем с потоками
+    enable_bot = os.getenv("ENABLE_TELEGRAM_BOT", "false").lower() == "true"
     
-    # Даем боту время на запуск
-    time.sleep(2)
+    if enable_bot:
+        # Запускаем Telegram бота в отдельном потоке
+        bot_thread = threading.Thread(target=start_telegram_bot, daemon=True)
+        bot_thread.start()
+        
+        # Даем боту время на запуск
+        time.sleep(2)
+    else:
+        print("ℹ️  Telegram бот отключен (ENABLE_TELEGRAM_BOT=false или не установлен)")
+        print("   Для включения установите ENABLE_TELEGRAM_BOT=true в .env файле")
+        print()
     
     # Запускаем веб-сервер (блокирующий вызов)
     try:
