@@ -891,7 +891,7 @@ async def upload_file(
                 # Переменные с auto_generate = false - берем значение из JSON
                 value = var.get('value', '').strip()
                 # Заменяем символ ; на ; + символ новой строки (для создания элементов списка)
-                value = value.replace(';', ';\n')
+                value = value.replace(';', ';\n\t')
                 if value:  # Обновляем только если значение не пустое
                     all_variables_dict[name] = value
         
@@ -944,7 +944,7 @@ async def upload_file(
                     # Обновляем только если переменная еще не заполнена вручную
                     if not all_variables_dict[key]:
                         # Заменяем символ ; на ; + символ новой строки (для создания элементов списка)
-                        value = value.replace(';', ';\n')
+                        value = value.replace(';', ';\n\t')
                         all_variables_dict[key] = value
                         updated_count += 1
             
