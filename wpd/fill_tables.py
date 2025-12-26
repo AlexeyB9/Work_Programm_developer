@@ -251,7 +251,7 @@ def fill_one_table_from_perplexity(
         for chunk in stream:
             if completion_id is None and hasattr(chunk, "id") and chunk.id:
                 completion_id = chunk.id
-            
+                
             if getattr(chunk, "choices", None) and len(chunk.choices) > 0:
                 delta = chunk.choices[0].delta
                 content = getattr(delta, "content", None)

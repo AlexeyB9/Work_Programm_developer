@@ -61,7 +61,7 @@ def generate_docx_from_template(
         Если передан, все переменные из этого словаря будут добавлены в контекст, даже если пустые
     """
     context = {}
-    
+
     # Если передан словарь all_variables, добавляем все переменные в контекст
     # Это нужно для работы условных блоков {% if переменная %}
     if all_variables:
@@ -86,7 +86,7 @@ def generate_docx_from_template(
                 if len(item) != 2:
                     continue
                 key, value = item
-            
+
             key = str(key).strip()
             value = str(value).strip()
             if key:
