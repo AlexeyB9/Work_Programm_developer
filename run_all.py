@@ -6,7 +6,9 @@ import sys
 import threading
 import time
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 # Флаг для отслеживания запуска бота
 _bot_started = False
 

@@ -95,6 +95,8 @@ def _extract_values_from_ai_response(text: str) -> List[str]:
     - JSON list-of-lists -> будет "сплющен" в плоский список
     - маркированные/нумерованные списки
     - строка с ';' или ','
+    
+    ВАЖНО: Пустые значения сохраняются и не фильтруются.
     """
     if not text:
         return []
@@ -109,10 +111,12 @@ def _extract_values_from_ai_response(text: str) -> List[str]:
             flat: list[str] = []
             for x in obj:
                 if isinstance(x, list):
-                    flat.extend(str(v).strip() for v in x if str(v).strip())
+                    # Сохраняем все значения, включая пустые
+                    flat.extend(str(v).strip() if v is not None else "" for v in x)
                 else:
-                    flat.append(str(x).strip())
-            return [v for v in flat if v]
+                    # Сохраняем значение, включая пустое
+                    flat.append(str(x).strip() if x is not None else "")
+            return flat  # Возвращаем все значения, включая пустые
     except Exception:
         pass
 
@@ -125,10 +129,12 @@ def _extract_values_from_ai_response(text: str) -> List[str]:
                 flat: list[str] = []
                 for x in obj:
                     if isinstance(x, list):
-                        flat.extend(str(v).strip() for v in x if str(v).strip())
+                        # Сохраняем все значения, включая пустые
+                        flat.extend(str(v).strip() if v is not None else "" for v in x)
                     else:
-                        flat.append(str(x).strip())
-                return [v for v in flat if v]
+                        # Сохраняем значение, включая пустое
+                        flat.append(str(x).strip() if x is not None else "")
+                return flat  # Возвращаем все значения, включая пустые
         except Exception:
             pass
 
@@ -136,20 +142,24 @@ def _extract_values_from_ai_response(text: str) -> List[str]:
     out: list[str] = []
     for line in s.replace("\r\n", "\n").split("\n"):
         line = line.strip()
+        # Пропускаем только полностью пустые строки между элементами
+        # Но если это единственный элемент, сохраняем его
         if not line:
             continue
         line = re.sub(r"^[-•]\s*", "", line)
         line = re.sub(r"^\d+[\.\)]\s*", "", line)
-        if line:
-            out.append(line)
+        # Сохраняем строку, даже если она стала пустой после удаления маркеров
+        out.append(line)
     if len(out) >= 2:
         return out
 
     # 4) разделители
     if ";" in s:
-        return [p.strip() for p in s.split(";") if p.strip()]
+        # Сохраняем все значения, включая пустые между разделителями
+        return [p.strip() for p in s.split(";")]
     if "," in s:
-        return [p.strip() for p in s.split(",") if p.strip()]
+        # Сохраняем все значения, включая пустые между разделителями
+        return [p.strip() for p in s.split(",")]
 
     return [s] if s else []
 
@@ -202,34 +212,55 @@ def fill_one_table_from_perplexity(
     else:
         messages.append({"role": "user", "content": prompt})
 
-    stream = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature=0.2,
-        stream=True,
-    )
+    # Минимальное логирование для оптимизации
+    print(f"\n=== TABLE {table_index} (start {start_row}:{start_col}, cols {cols_per_row}) ===")
+    print(f"История чата: {len(messages)} сообщений")
+    
+    # Отправляем запрос точно так же, как в call_api_in_one
+    stream_params = {
+        "model": model,
+        "messages": messages,
+        "temperature": 0.2,
+        "stream": True
+    }
+    
+    try:
+        stream = client.chat.completions.create(**stream_params)
+    except Exception as api_error:
+        error_msg = str(api_error)
+        print(f"ОШИБКА при запросе к API для таблицы {table_index}: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        if "api_key" in error_msg.lower() or "authentication" in error_msg.lower() or "401" in error_msg:
+            raise ValueError(
+                f"Ошибка аутентификации API для таблицы {table_index}: Проверьте что PPLX_API_KEY установлен правильно. "
+                f"Детали: {error_msg}"
+            )
+        elif "connection" in error_msg.lower() or "timeout" in error_msg.lower() or "network" in error_msg.lower():
+            raise ConnectionError(
+                f"Ошибка подключения к Perplexity API для таблицы {table_index}: {error_msg}. "
+                f"Проверьте интернет-соединение и доступность api.perplexity.ai"
+            )
+        else:
+            raise Exception(f"Ошибка при запросе к API для таблицы {table_index}: {error_msg}")
 
     completion_id = None
     answer_text = ""
-    print(f"\n=== TABLE {table_index} (start {start_row}:{start_col}, cols {cols_per_row}) ===")
-    for chunk in stream:
-        if completion_id is None and hasattr(chunk, "id") and chunk.id:
-            completion_id = chunk.id
-            print(f"COMPLETION_ID: {completion_id}")
-        if getattr(chunk, "choices", None) and len(chunk.choices) > 0:
-            delta = chunk.choices[0].delta
-            content = getattr(delta, "content", None)
-            if content:
-                answer_text += content
-                print(content, end="", flush=True)
-    print("\n=== /AI ===\n")
-
-    values = _extract_values_from_ai_response(answer_text)
-    print(f"Распарсено значений: {len(values)}")
-    if values:
-        print("Первые 12 значений:", values[:12])
-    if not values:
-        raise ValueError("Не удалось распарсить значения из ответа ИИ (ожидался JSON-массив).")
+    
+    try:
+        for chunk in stream:
+            if completion_id is None and hasattr(chunk, "id") and chunk.id:
+                completion_id = chunk.id
+            
+            if getattr(chunk, "choices", None) and len(chunk.choices) > 0:
+                delta = chunk.choices[0].delta
+                content = getattr(delta, "content", None)
+                if content:
+                    answer_text += content
+    except Exception as stream_error:
+        error_msg = str(stream_error)
+        if not answer_text:
+            raise Exception(f"Не удалось получить ответ от API для таблицы {table_index}: {error_msg}")
 
     # Преобразуем номер таблицы из вашей схемы (1-based) в python-docx индекс (0-based)
     doc_table_index = _to_zero_based_table_index(
@@ -256,17 +287,15 @@ def fill_one_table_from_perplexity(
     except Exception as e:
         print(f"[TABLE] Не удалось прочитать структуру таблицы перед заполнением: {e}")
 
-    # сохраняем в историю (и сразу нормализуем, чтобы не копить "ломаную" последовательность)
+    # Парсим значения из ответа ИИ
+    values = _extract_values_from_ai_response(answer_text)
+    if not values:
+        raise ValueError(f"Не удалось распарсить значения из ответа ИИ для таблицы {table_index} (ожидался JSON-массив). Ответ был: {answer_text[:200]}...")
+
+    # Сохраняем в историю (и сразу нормализуем, чтобы не копить "ломаную" последовательность)
     messages.append({"role": "assistant", "content": answer_text})
     messages = _normalize_messages(messages)
     _save_chat_messages(thread_id, messages, store_path=store_path)
-
-    values = _extract_values_from_ai_response(answer_text)
-    print(f"Распарсено значений: {len(values)}")
-    if values:
-        print("Первые 12 значений:", values[:12])
-    if not values:
-        raise ValueError("Не удалось распарсить значения из ответа ИИ (ожидался JSON-массив).")
 
     # заполняем таблицу (ВАЖНО: table_index здесь уже doc_index)
     fill_table_row_major(

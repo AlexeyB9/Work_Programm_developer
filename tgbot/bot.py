@@ -6,7 +6,9 @@ import os
 import sys
 import uuid
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
 # Добавляем родительскую директорию в путь для импорта init_core
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -126,7 +128,7 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         )
 
         # Вызываем функцию из ядра
-        init_core(
+        result_path_str, thread_id = init_core(
             file1_path=str(TEMPLATE_PATH),  # Шаблон РПД
             file2_path=str(uploaded_file_path),  # Загруженный учебник от пользователя
             prompt=prompt,
@@ -134,6 +136,7 @@ async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             template_path=str(TEMPLATE_PATH),
             result_path=str(result_path),
         )
+        result_path = Path(result_path_str)
 
         # Проверяем, что файл результата создан
         if not result_path.exists():

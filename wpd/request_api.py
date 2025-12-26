@@ -226,11 +226,9 @@ def call_api_in_one(
     completion_id: str | None = None
     full_response = ""
 
-    print("Получение ответа от API...")
     for chunk in stream:
         if completion_id is None and hasattr(chunk, "id") and chunk.id:
             completion_id = chunk.id
-            print(f"COMPLETION_ID: {completion_id}")
 
         # Собираем содержимое ответа
         if getattr(chunk, "choices", None) and len(chunk.choices) > 0:
@@ -244,9 +242,6 @@ def call_api_in_one(
 
             if content:
                 full_response += content
-                print(content, end="", flush=True)
-
-    print()  # Новая строка после завершения потока
 
     # Сохраняем историю для продолжения "того же чата" через CHAT_ID
     if full_response:
@@ -351,11 +346,9 @@ def call_api_in_two(
     completion_id: str | None = None
     full_response = ""
 
-    print("Получение ответа от API...")
     for chunk in stream:
         if completion_id is None and hasattr(chunk, "id") and chunk.id:
             completion_id = chunk.id
-            print(f"COMPLETION_ID: {completion_id}")
 
         # Собираем содержимое ответа
         if getattr(chunk, "choices", None) and len(chunk.choices) > 0:
@@ -369,9 +362,6 @@ def call_api_in_two(
 
             if content:
                 full_response += content
-                print(content, end="", flush=True)
-
-    print()  # Новая строка после завершения потока
 
     # Сохраняем историю для продолжения "того же чата" через CHAT_ID
     if full_response:

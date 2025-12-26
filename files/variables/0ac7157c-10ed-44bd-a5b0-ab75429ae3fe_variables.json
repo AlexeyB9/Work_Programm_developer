@@ -1,0 +1,170 @@
+{
+  "variables": [
+    {
+      "name": "ВИДЫ_КОНТРОЛЯ_УСПЕВАЕМОСТИ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ГОД_ПРИЕМА",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ДИСЦИПЛИНЫ_ДЛЯ_ИСПОЛЬЗОВАНИЯ_ЗНАНИЙ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ДОЛЖНОСТЬ_УЧ_СТЕПЕНЬ_ЗВАНИЕ_МЕТОДИСТ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ДОЛЖНОСТЬ_УЧ_СТЕПЕНЬ_ОТВЕТСТВЕННОГО",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ЗАДАНИЯ_И_ТРЕБОВАНИЯ_К_ЛАБОРАТОРНЫМ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ИНИЦИАЛЫ_ИМЕНИ_И_ОТЧЕСТВА_И_ФАМИЛИЯ_ЗАВ_КАФЕДРОЙ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ИНИЦИАЛЫ_ИМЕНИ_И_ОТЧЕСТВА_И_ФАМИЛИЯ_МЕТОДИСТ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ИНИЦИАЛЫ_ИМЕНИ_И_ОТЧЕСТВА_И_ФАМИЛИЯ_ОТВЕТСТВЕННОГО_ЗА_ПРОГРАММУ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "КОД_НАПРАВЛЕНИЯ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "КОЛИЧЕСТВО_ЗАЧЕТНЫХ_ЕДИНИЦ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "КОЛИЧЕСТВО_ЧАСОВ_КОТОРЫЕ_НУЖНЫ_ДЛЯ_ОСВОЕНИЯ_ДИСЦИПЛИНЫ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "НАЗВАНИЕ_ДИСЦИПЛИНЫ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "НАИМЕНОВАНИЕ_НАПРАВЛЕНИЯ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "НАИМЕНОВАНИЕ_НАПРАВЛЕННОСТИ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "НОМЕР_ИНСТИТУТА",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "НОМЕР_КАФЕДРЫ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "СМЕЖНЫЕ_ДИСЦИПЛИНЫ_ИЗУЧЕННЫЕ_РАНЕЕ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "СТРУКТУРА_И_ФОРМА_ОТЧЕТА_О_ЛАБОРАТОРНОЙ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "СТРУКТУРА_ПОЯСНИТЕЛЬНОЙ_ЗАПИСКИ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "СТРУКТУРА_ПРЕДОСТАВЛЕНИЯ_ЛЕКЦИОННОГО_МАТЕРИАЛА",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ТРЕБОВАНИЯ_И_МЕТОДЫ_ПРОВЕДЕНИЯ_ПРОМЕЖУТОЧНОЙ_АТТЕСТАЦИИ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ТРЕБОВАНИЯ_И_МЕТОДЫ_ПРОВЕДЕНИЯ_ТЕКУЩЕГО_КОНТРОЛЯ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ТРЕБОВАНИЯ_К_ОФОРМЛЕНИЮ_ОТЧЕТА_О_ЛАБОРАТОРНОЙ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ТРЕБОВАНИЯ_К_ОФОРМЛЕНИЮ_ПОЯСНИТЕЛЬНОЙ_ЗАПИСКИ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ТРЕБОВАНИЯ_К_ПРАКТИЧЕСКИМ_ЗАНЯТИЯМ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ТРЕБОВАНИЯ_К_СЕМИНАРАМ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "УЧ_СТЕПЕНЬ_ЗВАНИЕ_ЗАВ_КАФЕДРОЙ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ФИО_ОТВЕТСТВЕННОГО_ЗА_ПРОГРАММУ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ФОРМА_ОБУЧЕНИЯ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ФОРМЫ_ОРГАНИЗАЦИИ_УЧЕБНОГО_ПРОЦЕССА",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ХАРАКТЕРИСТИКА_ПРЕДМЕТНОЙ_ОБЛАСТИ",
+      "value": "",
+      "auto_generate": false
+    },
+    {
+      "name": "ЦЕЛИ_ПРЕПОДАВАНИЯ_ДИСЦИПЛИНЫ_ЧЕРЕЗ_ТОЧКУ_С_ЗАПЯТОЙ",
+      "value": "",
+      "auto_generate": false
+    }
+  ],
+  "count": 33
+}
